@@ -1,4 +1,4 @@
-package com.fas.project.dto;
+package com.fas.project.dto.user;
 
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDTO {
+public class RegisterRequestDTO {
     @NotBlank(message = "El campo de los nombres es obligatorio")
     private String nombres;
     @NotBlank(message = "El campo de los apellidos es obligatorio")
