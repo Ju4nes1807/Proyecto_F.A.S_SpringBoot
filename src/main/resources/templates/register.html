@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -50,13 +50,13 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
 
-                <a href="landingpage.html" class="flex items-center space-x-2">
-                    <img src="images/Logo.png" alt="Logo" class="navbar-logo mr-2 rounded-full shadow-md">
+                <a href="/landingpage" class="flex items-center space-x-2">
+                    <img src="/images/Logo.png" alt="Logo" class="navbar-logo mr-2 rounded-full shadow-md">
                     <p class="text-white text-3xl font-extrabold tracking-wide m-0">F.A.S</p>
                 </a>
 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="#"
+                    <a href="/landingpage"
                         class="bg-fas-yellow text-fas-dark-blue font-bold py-2 px-4 rounded-lg shadow-md hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
                         Regresar
                     </a>
@@ -79,7 +79,7 @@
 
         <div id="mobile-menu" class="hidden md:hidden bg-fas-dark-blue">
             <div class="px-2 pt-2 pb-3">
-                <a href="landingpage.html"
+                <a href="/landingpage"
                     class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-fas-blue/80 text-center">
                     Regresar
                 </a>
@@ -90,63 +90,98 @@
     <div class="max-w-xl mx-auto mt-8 mb-12 bg-white p-8 rounded-xl shadow-2xl w-full">
         <h3 class="text-3xl font-extrabold text-fas-dark-blue text-center mb-6">Regístrate en F.A.S</h3>
 
-        <!-- FORMULARIO SIN BLADE -->
-        <form action="/registro" method="POST" class="space-y-5">
+        <!-- Mensaje de error general -->
+        <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <p th:text="${error}"></p>
+        </div>
+
+        <!-- FORMULARIO CON THYMELEAF -->
+        <form th:action="@{/proceso-registro}" th:object="${registerDTO}" method="POST" class="space-y-5">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombres</label>
-                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="Ingrese sus nombres" required>
+                <input type="text" th:field="*{nombres}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('nombres')} ? 'is-invalid' : ''"
+                    placeholder="Ingrese sus nombres">
+                <div th:if="${#fields.hasErrors('nombres')}" class="invalid-feedback">
+                    <p th:errors="*{nombres}"></p>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Apellidos</label>
-                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="Ingrese sus apellidos" required>
+                <input type="text" th:field="*{apellidos}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('apellidos')} ? 'is-invalid' : ''"
+                    placeholder="Ingrese sus apellidos">
+                <div th:if="${#fields.hasErrors('apellidos')}" class="invalid-feedback">
+                    <p th:errors="*{apellidos}"></p>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Número de Documento</label>
-                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="Ej: 1234567890" required>
+                <input type="number" th:field="*{numDocumento}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('numDocumento')} ? 'is-invalid' : ''"
+                    placeholder="Ej: 1234567890">
+                <div th:if="${#fields.hasErrors('numDocumento')}" class="invalid-feedback">
+                    <p th:errors="*{numDocumento}"></p>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
-                <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    required>
+                <input type="date" th:field="*{fechaNacimiento}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('fechaNacimiento')} ? 'is-invalid' : ''">
+                <div th:if="${#fields.hasErrors('fechaNacimiento')}" class="invalid-feedback">
+                    <p th:errors="*{fechaNacimiento}"></p>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
-                <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="ejemplo@correo.com" required>
+                <input type="email" th:field="*{email}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                    placeholder="ejemplo@correo.com">
+                <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
+                    <p th:errors="*{email}"></p>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="Ej: 3001234567" required>
+                <input type="tel" th:field="*{telefono}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid' : ''"
+                    placeholder="Ej: 3001234567">
+                <div th:if="${#fields.hasErrors('telefono')}" class="invalid-feedback">
+                    <p th:errors="*{telefono}"></p>
+                </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Rol</label>
-                <select class="w-full px-4 py-2 border rounded-lg focus:ring-fas-blue" required>
+                <select name="roles" class="w-full px-4 py-2 border rounded-lg focus:ring-fas-blue" required>
                     <option value="">Seleccione un rol</option>
-                    <option value="1">Administrador</option>
-                    <option value="2">Usuario</option>
+                    <option value="ADMIN">Administrador</option>
+                    <option value="LIDER">Líder</option>
+                    <option value="JUGADOR">Jugador</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="Contraseña" required>
-            </div>
-
-            <div>
-                <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
-                    placeholder="Confirmar Contraseña" required>
+                <input type="password" th:field="*{password}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-fas-blue"
+                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                    placeholder="Contraseña">
+                <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+                    <p th:errors="*{password}"></p>
+                </div>
             </div>
 
             <button type="submit"
