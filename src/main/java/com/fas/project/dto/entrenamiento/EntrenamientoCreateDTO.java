@@ -1,4 +1,4 @@
-package com.fas.project.dto.user;
+package com.fas.project.dto.entrenamiento;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,4 +24,3 @@ public class EntrenamientoCreateDTO {
     private String descripcion;
     private Integer id_categoria;
 }
-

@@ -1,4 +1,4 @@
-package com.fas.project.dto.user;
+package com.fas.project.dto.entrenamiento;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class EntrenamientoDTO {
 
     private Integer idEntrenamiento;
     private String titulo;
-    private String fecha;       // se envía como texto al front
+    private String fecha;
     private String hora_inicio;
     private String hora_fin;
     private String lugar;
