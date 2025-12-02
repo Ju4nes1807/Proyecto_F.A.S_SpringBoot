@@ -29,4 +29,7 @@ public class Ubicacion {
 
     @ManyToMany(mappedBy = "ubicaciones")
     private Set<Escuela> escuelas;
+
+    @OneToMany(mappedBy = "ubicacion")
+    private Set<Cancha> canchas;
 }

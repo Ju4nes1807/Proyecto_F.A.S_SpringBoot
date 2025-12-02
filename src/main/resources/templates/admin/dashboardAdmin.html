@@ -65,11 +65,10 @@
                 <h5 class="mb-3 text-primary">Inicio</h5>
 
                 <div class="list-group">
-                    <a href="dashboard.html" class="list-group-item list-group-item-action active">Inicio</a>
-                    <a href="escuelas.html" class="list-group-item list-group-item-action">Escuelas</a>
+                    <a th:href="@{/admin/dashboard}" class="list-group-item list-group-item-action active">Inicio</a>
+                    <a th:href="@{/escuelas/admin/escuelas}" class="list-group-item list-group-item-action">Escuelas</a>
                     <a href="torneos.html" class="list-group-item list-group-item-action">Torneos</a>
-                    <a href="categorias.html" class="list-group-item list-group-item-action">Categorias</a>
-                    <a href="canchas.html" class="list-group-item list-group-item-action">Canchas</a>
+                    <a th:href="@{/canchas}" class="list-group-item list-group-item-action">Canchas</a>
                 </div>
             </div>
 
@@ -83,10 +82,8 @@
                     <div class="col-12 col-md-6 col-lg-4 mb-4">
                         <div class="card border-warning">
                             <div class="card-body text-center">
-                                <h5 class="card-title">Escuela</h5>
-                                <p>Consulte información sobre su escuela</p>
-                                <button class="btn btn-warning btn-sm shadow-sm" data-bs-toggle="modal"
-                                    data-bs-target="#consultarEscuela">Consultar Escuela</button>
+                                <h5 class="card-title">Escuelas</h5>
+                                <p>Consulte todas las escuelas registradas en el sistema</p>
                             </div>
                         </div>
                     </div>
@@ -95,9 +92,7 @@
                         <div class="card border-warning">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Torneos</h5>
-                                <p>Consulte la información de sus torneos realizados</p>
-                                <button class="btn btn-warning btn-sm shadow-sm" data-bs-toggle="modal"
-                                    data-bs-target="#consultarTorneos">Consultar Torneo</button>
+                                <p>Consulte la información de los torneos realizados en el sistema</p>
                             </div>
                         </div>
                     </div>
@@ -106,9 +101,7 @@
                         <div class="card border-warning">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Canchas</h5>
-                                <p>Consulte información de sus canchas</p>
-                                <button class="btn btn-warning btn-sm shadow-sm" data-bs-toggle="modal"
-                                    data-bs-target="#consultarCanchas">Consultar Canchas</button>
+                                <p>Consulte información de todas las canchas registradas en el sistema</p>
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,9 +80,25 @@ public class EscuelaController {
         escuelaService.eliminarEscuela(idEscuela);
         return switch (getCurrentUserRole()) {
             case "LIDER" -> "redirect:/lider/dashboard";
-            case "ADMIN" -> "redirect:/admin/escuelas";
+            case "ADMIN" -> "redirect:/escuelas/admin/escuelas";
             default -> "redirect:/";
         };
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/escuelas")
+    public String listarEscuelas(Model model) {
+        model.addAttribute("escuelas", escuelaService.obtenerTodasLasEscuelas());
+        return "admin/escuela/escuelas";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/escuelas/buscar")
+    public String buscarEscuelas(@RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String localidad,
+            Model model) {
+        model.addAttribute("escuelas", escuelaService.buscarEscuelas(nombre, localidad));
+        return "admin/escuela/escuelas";
     }
 
     private String getCurrentUserRole() {

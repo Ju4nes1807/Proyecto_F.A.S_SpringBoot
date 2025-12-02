@@ -65,6 +65,16 @@ public class EscuelaService {
                 .orElse(null);
     }
 
+    public List<Escuela> obtenerTodasLasEscuelas() {
+        return escuelaRepository.findAllWithUbicacionesAndLideres();
+    }
+
+    public List<Escuela> buscarEscuelas(String nombre, String localidad) {
+        return escuelaRepository.buscarPorNombreYLocalidad(
+                nombre != null && !nombre.isBlank() ? nombre : null,
+                localidad != null && !localidad.isBlank() ? localidad : null);
+    }
+
     public EscuelaDTO obtenerPorId(Integer idEscuela) {
         @SuppressWarnings("null")
         Escuela escuela = escuelaRepository.findById(idEscuela)
