@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JugadorRequestDTO {
+public class JugadorDTO {
     @NotNull(message = "La categoría es obligatoria")
     private Integer idcategoria;
     @NotBlank(message = "La posición es obligatoria")

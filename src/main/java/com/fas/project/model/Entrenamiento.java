@@ -37,19 +37,15 @@ public class Entrenamiento {
     @Column(nullable = true, length = 255)
     private String descripcion;
 
-    // 🔵 Cada entrenamiento pertenece a una escuela
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_escuela", nullable = false)
     private Escuela escuela;
 
-    // 🔵 Cada entrenamiento pertenece a una categoria
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    // 🔵 Líder que creo el entrenamiento 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_lider", nullable = true)
     private Lider creador;
 }
-
