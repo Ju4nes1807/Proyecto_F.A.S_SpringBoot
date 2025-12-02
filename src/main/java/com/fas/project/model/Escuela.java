@@ -1,6 +1,7 @@
 package com.fas.project.model;
 
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -24,17 +25,18 @@ public class Escuela {
     @Column(nullable = true, unique = true, length = 50)
     private String email;
 
-    @OneToMany(mappedBy = "escuela", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Lider> lideres;
+    @OneToMany(mappedBy = "escuela", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Lider> lideres = new ArrayList<>();
 
     @OneToMany(mappedBy = "escuela", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Jugador> jugadores;
+    @Builder.Default
+    private List<Jugador> jugadores = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "tb_escuela_ubicacion", joinColumns = @JoinColumn(name = "id_escuela"), inverseJoinColumns = @JoinColumn(name = "id_ubicacion"))
     private Set<Ubicacion> ubicaciones;
 
-    @ManyToMany
-    @JoinTable(name = "tb_escuela_categoria", joinColumns = @JoinColumn(name = "id_escuela"), inverseJoinColumns = @JoinColumn(name = "id_categoria"))
-    private Set<Categoria> categorias;
+    @OneToMany(mappedBy = "escuela", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Categoria> categorias;
 }

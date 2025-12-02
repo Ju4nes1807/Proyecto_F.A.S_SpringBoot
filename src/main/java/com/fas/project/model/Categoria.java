@@ -1,7 +1,6 @@
 package com.fas.project.model;
 
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,9 +21,11 @@ public class Categoria {
     @Column(nullable = false, length = 30)
     private String rangoEdad;
 
-    @OneToMany(mappedBy = "categoria", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
     private List<Jugador> jugadores;
 
-    @ManyToMany(mappedBy = "categorias")
-    private Set<Escuela> escuelas;
+    @ManyToOne
+    @JoinColumn(name = "escuela_id", nullable = false)
+    private Escuela escuela;
+
 }
