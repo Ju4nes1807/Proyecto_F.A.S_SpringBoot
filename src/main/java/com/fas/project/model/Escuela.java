@@ -25,7 +25,7 @@ public class Escuela {
     @Column(nullable = true, unique = true, length = 50)
     private String email;
 
-    @OneToMany(mappedBy = "escuela", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "escuela", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Lider> lideres = new ArrayList<>();
 

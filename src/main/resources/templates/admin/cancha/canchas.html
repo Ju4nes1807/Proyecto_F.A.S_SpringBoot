@@ -65,7 +65,7 @@
                     <a th:href="@{/escuelas/admin/escuelas}" class="list-group-item list-group-item-action">Escuelas</a>
                     <a href="#" class="list-group-item list-group-item-action">Torneos</a>
                     <a th:href="@{/canchas}" class="list-group-item list-group-item-action active">Canchas</a>
-                    <a href="#" class="list-group-item list-group-item-action">Usuarios</a>
+                    <a th:href="@{/lideres}" class="list-group-item list-group-item-action">Lideres</a>
                 </div>
             </div>
 
@@ -82,7 +82,8 @@
                         </div>
 
                         <div class="input-group ms-2">
-                            <span class="input-group-text">Ubicación</span>
+                            <span class="input-group-text"><i class="fa-solid fa-location-dot"></i>
+                            </span>
                             <select class="form-select" name="ubicacionId">
                                 <option value="">Todas</option>
 
@@ -114,6 +115,7 @@
                                 <th>Dirección</th>
                                 <th>Localidad</th>
                                 <th>Barrio</th>
+                                <th>Horario</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -127,28 +129,34 @@
 
                                 <td th:text="${cancha.ubicacion.localidad}"></td>
                                 <td th:text="${cancha.ubicacion.barrio}"></td>
-
+                                <td th:text="${cancha.horarioDisponibilidad}"></td>
                                 <td>
                                     <span th:if="${cancha.estadoDisponible}" class="badge bg-success">Disponible</span>
                                     <span th:unless="${cancha.estadoDisponible}" class="badge bg-danger">No
                                         disponible</span>
                                 </td>
                                 <td>
-                                    <a th:href="@{'/canchas/editar/' + ${cancha.idCancha}}"
-                                        class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                    <div style="display:flex; gap:8px; align-items:center;">
 
-                                    <form id="formEliminarCancha_${cancha.idCancha}"
-                                        th:action="@{/canchas/eliminar/{id}(id=${cancha.idCancha})}" method="post"
-                                        style="display:none;">
-                                        <input type="hidden" th:name="${_csrf.parameterName}"
-                                            th:value="${_csrf.token}" />
-                                    </form>
+                                        <a th:href="@{'/canchas/editar/' + ${cancha.idCancha}}"
+                                            class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
 
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#modalConfirmacion"
-                                        data-form-id="formEliminarCancha_${cancha.idCancha}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                        <form id="formEliminarCancha_${cancha.idCancha}"
+                                            th:action="@{/canchas/eliminar/{id}(id=${cancha.idCancha})}" method="post"
+                                            style="display:none;">
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                th:value="${_csrf.token}" />
+                                        </form>
+
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#modalConfirmacion"
+                                            data-form-id="formEliminarCancha_${cancha.idCancha}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                    </div>
                                 </td>
 
                             </tr>
