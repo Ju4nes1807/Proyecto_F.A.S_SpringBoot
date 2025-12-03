@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="modalConfirmacionLider" class="modal fade" id="modalConfirmacionLider" tabindex="-1"
+        aria-labelledby="modalConfirmacionLiderLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning ">
+                    <h5 class="modal-title" id="modalConfirmacionLiderLabel">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación de Líder
+                    </h5>
+                    <button type="button" class="btn-close btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-info-circle"></i> <strong>Advertencia:</strong> Esta acción no se puede
+                        deshacer.
+                    </div>
+                    <p class="mb-2">¿Está seguro que desea eliminar al siguiente líder?</p>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Líder:</strong> <span id="nombreLider"></span></p>
+                            <p class="mb-0"><strong>Escuela:</strong> <span id="nombreEscuela"
+                                    class="badge bg-info"></span></p>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger mt-3 mb-0" role="alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>Importante:</strong> Al eliminar este líder, también se eliminará su escuela asociada
+                        del sistema.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteLiderBtn">
+                        <i class="fas fa-trash"></i> Sí, eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

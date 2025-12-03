@@ -49,7 +49,7 @@
                         class="list-group-item list-group-item-action active">Escuelas</a>
                     <a href="#" class="list-group-item list-group-item-action">Torneos</a>
                     <a th:href="@{/canchas}" class="list-group-item list-group-item-action">Canchas</a>
-                    <a href="#" class="list-group-item list-group-item-action">Usuarios</a>
+                    <a th:href="@{/lideres}" class="list-group-item list-group-item-action">Lideres</a>
                 </div>
             </div>
 
@@ -73,13 +73,18 @@
 
                                 <!-- Input para localidad -->
                                 <div class="input-group me-sm-2 mb-2 mb-sm-0" style="width: auto;">
+                                    <span class="input-group-text"><i class="fa-solid fa-location-dot"></i>
+                                    </span>
                                     <input class="form-control" type="search" name="localidad"
                                         placeholder="Buscar por localidad..." aria-label="Localidad"
                                         th:value="${param.localidad}" />
                                 </div>
 
                                 <!-- Botón limpiar -->
-                                <a th:href="@{/escuelas/admin/escuelas}" class="btn btn-warning ms-2">Limpiar</a>
+                                <a th:href="@{/escuelas/admin/escuelas}" class="btn btn-outline-warning"
+                                    title="Limpiar filtros">
+                                    <i class="fas fa-sync-alt"></i>
+                                </a>
                             </form>
                         </div>
                     </div>

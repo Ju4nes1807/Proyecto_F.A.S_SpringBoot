@@ -3,26 +3,32 @@ package com.fas.project.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fas.project.dto.user.RegisterRequestDTO;
+import com.fas.project.model.Escuela;
 import com.fas.project.model.Lider;
 import com.fas.project.model.Rol;
 import com.fas.project.model.User;
 import com.fas.project.repository.UserRepository;
+import com.fas.project.repository.EscuelaRepository;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EscuelaRepository escuelaRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            EscuelaRepository escuelaRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.escuelaRepository = escuelaRepository;
     }
 
     @Transactional
@@ -105,9 +111,57 @@ public class UserService {
         existingUser.setTelefono(userUpdateData.getTelefono());
         existingUser.setFechaNacimiento(userUpdateData.getFechaNacimiento());
 
-        // Guardar (debido a @Transactional, esto se guarda automáticamente,
-        // pero es buena práctica llamar a save si el framework lo requiere
-        // explícitamente)
         userRepository.save(existingUser);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Lider> listarLideres() {
+        return userRepository.findAllLideres();
+    }
+
+    @Transactional
+    public void deleteLider(Integer liderId) {
+        User user = userRepository.findById(liderId)
+                .orElseThrow(() -> new RuntimeException("Líder no encontrado"));
+
+        if (!(user instanceof Lider)) {
+            throw new IllegalArgumentException("El usuario no es un líder");
+        }
+
+        Lider lider = (Lider) user;
+        Escuela escuela = lider.getEscuela();
+
+        // Si el líder tiene una escuela asociada
+        if (escuela != null) {
+            // Remover el líder de la lista de líderes de la escuela
+            escuela.getLideres().remove(lider);
+
+            // Desasociar la escuela del líder
+            lider.setEscuela(null);
+
+            // Verificar si la escuela tiene más líderes
+            if (escuela.getLideres().isEmpty()) {
+                // Si no tiene más líderes, eliminar la escuela
+                escuelaRepository.delete(escuela);
+            } else {
+                // Si tiene más líderes, solo guardar los cambios
+                escuelaRepository.save(escuela);
+            }
+        }
+
+        // Finalmente eliminar el líder
+        userRepository.delete(lider);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Lider> listarLideres(String nombreCompleto, String numDocumento) {
+        // Si no hay filtros, retornar todos
+        if ((nombreCompleto == null || nombreCompleto.trim().isEmpty()) &&
+                (numDocumento == null || numDocumento.trim().isEmpty())) {
+            return userRepository.findAllLideres();
+        }
+
+        // Si hay filtros, aplicarlos
+        return userRepository.findLideresByFiltros(nombreCompleto, numDocumento);
     }
 }

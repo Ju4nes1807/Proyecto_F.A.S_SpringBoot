@@ -82,7 +82,7 @@
                         </div>
 
                         <div class="input-group ms-2">
-                            <span class="input-group-text">Ubicación</span>
+                            <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
                             <select class="form-select" name="ubicacionId">
                                 <option value="">Todas</option>
 
@@ -111,6 +111,7 @@
                                 <th>Dirección</th>
                                 <th>Localidad</th>
                                 <th>Barrio</th>
+                                <th>Horario</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
@@ -123,7 +124,7 @@
 
                                 <td th:text="${cancha.ubicacion.localidad}"></td>
                                 <td th:text="${cancha.ubicacion.barrio}"></td>
-
+                                <td th:text="${cancha.horarioDisponibilidad}"></td>
                                 <td>
                                     <span th:if="${cancha.estadoDisponible}" class="badge bg-success">Disponible</span>
                                     <span th:unless="${cancha.estadoDisponible}" class="badge bg-danger">No
