@@ -37,6 +37,6 @@ public class Escuela {
     @JoinTable(name = "tb_escuela_ubicacion", joinColumns = @JoinColumn(name = "id_escuela"), inverseJoinColumns = @JoinColumn(name = "id_ubicacion"))
     private Set<Ubicacion> ubicaciones;
 
-    @OneToMany(mappedBy = "escuela", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "escuela", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Categoria> categorias;
 }

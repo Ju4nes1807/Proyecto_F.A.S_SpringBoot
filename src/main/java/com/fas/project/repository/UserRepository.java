@@ -13,19 +13,19 @@ import com.fas.project.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+        Optional<User> findByEmail(String email);
 
-    boolean existsByEmail(String email);
+        boolean existsByEmail(String email);
 
-    boolean existsByNumDocumento(Long numDocumento);
+        boolean existsByNumDocumento(Long numDocumento);
 
-    @Query("SELECT u FROM User u WHERE TYPE(u) = Lider")
-    List<Lider> findAllLideres();
+        @Query("SELECT u FROM User u WHERE TYPE(u) = Lider")
+        List<Lider> findAllLideres();
 
-    @Query("SELECT l FROM Lider l WHERE " +
-            "(:nombreCompleto IS NULL OR LOWER(CONCAT(l.nombres, ' ', l.apellidos)) LIKE LOWER(CONCAT('%', :nombreCompleto, '%'))) AND "
-            +
-            "(:numDocumento IS NULL OR CAST(l.numDocumento AS string) LIKE CONCAT('%', :numDocumento, '%'))")
-    List<Lider> findLideresByFiltros(@Param("nombreCompleto") String nombreCompleto,
-            @Param("numDocumento") String numDocumento);
+        @Query("SELECT l FROM Lider l WHERE " +
+                        "(:nombreCompleto IS NULL OR LOWER(CONCAT(l.nombres, ' ', l.apellidos)) LIKE LOWER(CONCAT('%', :nombreCompleto, '%'))) AND "
+                        +
+                        "(:numDocumento IS NULL OR CAST(l.numDocumento AS string) LIKE CONCAT('%', :numDocumento, '%'))")
+        List<Lider> findLideresByFiltros(@Param("nombreCompleto") String nombreCompleto,
+                        @Param("numDocumento") String numDocumento);
 }

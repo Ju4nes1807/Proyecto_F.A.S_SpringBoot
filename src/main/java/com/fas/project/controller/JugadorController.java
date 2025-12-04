@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/jugadores")
 public class JugadorController {
-    
+
     private final JugadorService jugadorService;
 
     public JugadorController(JugadorService jugadorService) {
@@ -35,28 +35,28 @@ public class JugadorController {
             @RequestParam(required = false) Integer categoriaId,
             @RequestParam(required = false) String posicion,
             Model model) {
-        
+
         try {
             var jugadores = jugadorService.buscarJugadoresPorFiltros(nombre, categoriaId, posicion);
             var categorias = jugadorService.obtenerCategoriasDelLider();
-            
+
             model.addAttribute("jugadores", jugadores);
             model.addAttribute("categorias", categorias);
             model.addAttribute("requestNombre", nombre);
             model.addAttribute("requestCategoria", categoriaId);
             model.addAttribute("requestPosicion", posicion);
-            
+
         } catch (RuntimeException e) {
             if ("El líder no está asociado a ninguna escuela".equals(e.getMessage())) {
-                model.addAttribute("warningMessage", 
-                    "¡Atención! No puedes registrar o ver jugadores hasta que seas asociado a una escuela.");
+                model.addAttribute("warningMessage",
+                        "¡Atención! No puedes registrar o ver jugadores hasta que seas asociado a una escuela.");
                 model.addAttribute("jugadores", java.util.Collections.emptyList());
                 model.addAttribute("categorias", java.util.Collections.emptyList());
             } else {
                 throw e;
             }
         }
-        
+
         return "lider/jugadores/jugadores";
     }
 
@@ -82,12 +82,12 @@ public class JugadorController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("categorias", jugadorService.obtenerCategoriasDelLider());
             return "lider/jugadores/crearJugador";
         }
-        
+
         try {
             jugadorService.crearJugador(jugadorCreateDTO);
             redirectAttributes.addFlashAttribute("success", "Jugador creado exitosamente");
@@ -121,12 +121,12 @@ public class JugadorController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("categorias", jugadorService.obtenerCategoriasDelLider());
             return "lider/jugadores/editarJugador";
         }
-        
+
         try {
             jugadorService.actualizarJugador(idJugador, jugadorDTO);
             redirectAttributes.addFlashAttribute("success", "Jugador actualizado exitosamente");
@@ -143,14 +143,14 @@ public class JugadorController {
     public String eliminarJugador(
             @PathVariable("id") Integer idJugador,
             RedirectAttributes redirectAttributes) {
-        
+
         try {
             jugadorService.eliminarJugador(idJugador);
             redirectAttributes.addFlashAttribute("success", "Jugador eliminado exitosamente");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
+
         return "redirect:/jugadores";
     }
 }

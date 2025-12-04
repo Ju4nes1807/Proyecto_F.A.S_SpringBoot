@@ -21,7 +21,7 @@ public class Categoria {
     @Column(nullable = false, length = 30)
     private String rangoEdad;
 
-    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Jugador> jugadores;
 
     @ManyToOne

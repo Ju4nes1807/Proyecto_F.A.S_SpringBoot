@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fas.project.dto.escuela.EscuelaDTO;
 import com.fas.project.mapper.MapperEscuela;
@@ -96,10 +97,12 @@ public class EscuelaService {
         return escuelaRepository.save(escuela);
     }
 
+    @Transactional
     public void eliminarEscuela(Integer idEscuela) {
         Escuela escuela = escuelaRepository.findById(idEscuela)
                 .orElseThrow(() -> new IllegalArgumentException("Escuela no encontrada con ID: " + idEscuela));
 
+        // Desasociar líderes si es necesario
         if (!escuela.getLideres().isEmpty()) {
             for (Lider lider : escuela.getLideres()) {
                 lider.setEscuela(null);
@@ -107,9 +110,11 @@ public class EscuelaService {
             escuela.getLideres().clear();
         }
 
+        // Limpiar ubicaciones si quieres
         escuela.getUbicaciones().clear();
-        escuelaRepository.save(escuela);
 
+        // Eliminar escuela (jugadores se eliminan automáticamente)
         escuelaRepository.delete(escuela);
     }
+
 }
