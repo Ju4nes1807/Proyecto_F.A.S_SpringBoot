@@ -22,35 +22,35 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/torneos")
 public class TorneoController {
-    
+
     private final TorneoService torneoService;
     private final CategoriaRepository categoriaRepository;
     private final UbicacionRepository ubicacionRepository;
-    
+
     public TorneoController(TorneoService torneoService,
-                           CategoriaRepository categoriaRepository,
-                           UbicacionRepository ubicacionRepository) {
+            CategoriaRepository categoriaRepository,
+            UbicacionRepository ubicacionRepository) {
         this.torneoService = torneoService;
         this.categoriaRepository = categoriaRepository;
         this.ubicacionRepository = ubicacionRepository;
     }
-    
+
     // ===== ADMINISTRADOR =====
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin")
     public String listarTorneosAdmin(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String estado,
             Model model) {
-        
+
         model.addAttribute("torneos", torneoService.listarTorneos(nombre, estado));
         model.addAttribute("requestNombre", nombre);
         model.addAttribute("requestEstado", estado);
-        
+
         return "admin/torneo/torneos";
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/crear")
     public String mostrarFormularioCrear(Model model) {
@@ -61,7 +61,7 @@ public class TorneoController {
         model.addAttribute("ubicaciones", ubicacionRepository.findAll());
         return "admin/torneo/crearTorneo";
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/crear")
     public String crearTorneo(
@@ -69,13 +69,13 @@ public class TorneoController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("categorias", categoriaRepository.findAll());
             model.addAttribute("ubicaciones", ubicacionRepository.findAll());
             return "admin/torneo/crearTorneo";
         }
-        
+
         try {
             torneoService.crearTorneo(torneoCreateDTO);
             redirectAttributes.addFlashAttribute("success", "Torneo creado exitosamente");
@@ -87,7 +87,7 @@ public class TorneoController {
             return "admin/torneo/crearTorneo";
         }
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable("id") Integer id, Model model) {
@@ -102,7 +102,7 @@ public class TorneoController {
             return "redirect:/torneos/admin";
         }
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/editar/{id}")
     public String editarTorneo(
@@ -111,14 +111,14 @@ public class TorneoController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("categorias", categoriaRepository.findAll());
             model.addAttribute("ubicaciones", ubicacionRepository.findAll());
             model.addAttribute("torneoId", id);
             return "admin/torneo/editarTorneo";
         }
-        
+
         try {
             torneoService.actualizarTorneo(id, torneoCreateDTO);
             redirectAttributes.addFlashAttribute("success", "Torneo actualizado exitosamente");
@@ -131,23 +131,23 @@ public class TorneoController {
             return "admin/torneo/editarTorneo";
         }
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/eliminar/{id}")
     public String eliminarTorneo(
             @PathVariable("id") Integer id,
             RedirectAttributes redirectAttributes) {
-        
+
         try {
             torneoService.eliminarTorneo(id);
             redirectAttributes.addFlashAttribute("success", "Torneo eliminado exitosamente");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
+
         return "redirect:/torneos/admin";
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/inscritos/{id}")
     public String verInscritos(@PathVariable("id") Integer id, Model model) {
@@ -160,26 +160,26 @@ public class TorneoController {
             return "redirect:/torneos/admin";
         }
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/desinscribir/{inscripcionId}")
     public String desinscribirEscuela(
             @PathVariable("inscripcionId") Integer inscripcionId,
             @RequestParam("torneoId") Integer torneoId,
             RedirectAttributes redirectAttributes) {
-        
+
         try {
             torneoService.desinscribirEscuela(inscripcionId);
             redirectAttributes.addFlashAttribute("success", "Escuela desinscrita exitosamente");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
+
         return "redirect:/torneos/admin/inscritos/" + torneoId;
     }
-    
+
     // ===== LÍDER =====
-    
+
     @PreAuthorize("hasRole('LIDER')")
     @GetMapping("/lider")
     public String listarTorneosLider(Model model) {
@@ -187,43 +187,43 @@ public class TorneoController {
         model.addAttribute("misTorneos", torneoService.listarTorneosDelLider());
         return "lider/torneo/torneos";
     }
-    
+
     @PreAuthorize("hasRole('LIDER')")
     @PostMapping("/lider/inscribir/{id}")
     public String inscribirEnTorneo(
             @PathVariable("id") Integer id,
             RedirectAttributes redirectAttributes) {
-        
+
         try {
             torneoService.inscribirEscuela(id);
-            redirectAttributes.addFlashAttribute("success", 
-                "¡Inscripción exitosa! Tu escuela ha sido inscrita en el torneo.");
+            redirectAttributes.addFlashAttribute("success",
+                    "¡Inscripción exitosa! Tu escuela ha sido inscrita en el torneo.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
+
         return "redirect:/torneos/lider";
     }
-    
+
     @PreAuthorize("hasRole('LIDER')")
     @PostMapping("/lider/cancelar/{id}")
     public String cancelarInscripcion(
             @PathVariable("id") Integer id,
             RedirectAttributes redirectAttributes) {
-        
+
         try {
             torneoService.cancelarInscripcion(id);
-            redirectAttributes.addFlashAttribute("success", 
-                "Inscripción cancelada exitosamente");
+            redirectAttributes.addFlashAttribute("success",
+                    "Inscripción cancelada exitosamente");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
+
         return "redirect:/torneos/lider";
     }
-    
+
     // ===== JUGADOR =====
-    
+
     @PreAuthorize("hasRole('JUGADOR')")
     @GetMapping("/jugador")
     public String listarTorneosJugador(Model model) {

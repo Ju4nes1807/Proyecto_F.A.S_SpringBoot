@@ -14,7 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class TorneoDTO {
-    
     private Integer idTorneo;
     private String nombre;
     private LocalDate fechaInicio;

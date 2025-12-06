@@ -58,7 +58,7 @@
     <main class="container-fluid flex-grow-1">
         <div class="row">
             <aside class="col-md-3 col-lg-2 sidebar p-3">
-                <h5 class="text-primary mb-3">Menú Administrador</h5>
+                <h5 class="text-primary mb-3">Torneos</h5>
                 <div class="list-group">
                     <a th:href="@{/admin/dashboard}" class="list-group-item list-group-item-action">Inicio</a>
                     <a th:href="@{/escuelas/admin/escuelas}" class="list-group-item list-group-item-action">Escuelas</a>
@@ -69,9 +69,6 @@
             </aside>
 
             <div class="col-12 col-md-9 col-lg-10 p-4">
-                <div class="role-badge mb-3">
-                    <span class="badge bg-warning text-dark p-2">ADMINISTRADOR</span>
-                </div>
 
                 <!-- Mensajes -->
                 <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -90,8 +87,8 @@
                     <form class="d-flex flex-grow-1 mb-2 mb-md-0 me-md-2" th:action="@{/torneos/admin}" method="GET">
                         <div class="input-group flex-grow-1 me-2">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="search" class="form-control" placeholder="Buscar torneo..." 
-                                   name="nombre" th:value="${requestNombre}">
+                            <input type="search" class="form-control" placeholder="Buscar torneo..." name="nombre"
+                                th:value="${requestNombre}">
                         </div>
 
                         <div class="input-group me-2">
@@ -100,7 +97,8 @@
                                 <option value="">Todos</option>
                                 <option value="PROXIMO" th:selected="${requestEstado == 'PROXIMO'}">Próximos</option>
                                 <option value="EN_CURSO" th:selected="${requestEstado == 'EN_CURSO'}">En Curso</option>
-                                <option value="FINALIZADO" th:selected="${requestEstado == 'FINALIZADO'}">Finalizados</option>
+                                <option value="FINALIZADO" th:selected="${requestEstado == 'FINALIZADO'}">Finalizados
+                                </option>
                             </select>
                         </div>
 
@@ -150,8 +148,8 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a th:href="@{/torneos/admin/inscritos/{id}(id=${torneo.idTorneo})}" 
-                                       class="btn btn-sm btn-info">
+                                    <a th:href="@{/torneos/admin/inscritos/{id}(id=${torneo.idTorneo})}"
+                                        class="btn btn-sm btn-info">
                                         <i class="fas fa-users"></i> <span th:text="${torneo.totalInscritos}"></span>
                                     </a>
                                 </td>
@@ -160,21 +158,21 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
-                                        <a th:href="@{/torneos/admin/editar/{id}(id=${torneo.idTorneo})}" 
-                                           class="btn btn-sm btn-warning">
+                                        <a th:href="@{/torneos/admin/editar/{id}(id=${torneo.idTorneo})}"
+                                            class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
                                         <form th:id="'formEliminarTorneo_' + ${torneo.idTorneo}"
-                                              th:action="@{/torneos/admin/eliminar/{id}(id=${torneo.idTorneo})}" 
-                                              method="post" style="display:none;">
-                                            <input type="hidden" th:name="${_csrf.parameterName}" 
-                                                   th:value="${_csrf.token}" />
+                                            th:action="@{/torneos/admin/eliminar/{id}(id=${torneo.idTorneo})}"
+                                            method="post" style="display:none;">
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                th:value="${_csrf.token}" />
                                         </form>
 
-                                        <button type="button" class="btn btn-sm btn-danger" 
-                                                data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                                                th:data-form-id="'formEliminarTorneo_' + ${torneo.idTorneo}">
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#modalConfirmacion"
+                                            th:data-form-id="'formEliminarTorneo_' + ${torneo.idTorneo}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>

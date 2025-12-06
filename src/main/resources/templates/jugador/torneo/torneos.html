@@ -75,7 +75,7 @@
                     <i class="fas fa-trophy text-warning"></i> Mis Torneos
                 </h2>
                 <p class="text-muted">
-                    <i class="fas fa-info-circle"></i> 
+                    <i class="fas fa-info-circle"></i>
                     Aquí puedes ver los torneos en los que tu escuela está inscrita.
                 </p>
 
@@ -107,18 +107,19 @@
                                 <div class="border-start border-primary border-4 ps-3 mb-3">
                                     <p class="mb-2">
                                         <i class="fas fa-calendar-alt text-primary"></i>
-                                        <strong>Inicio:</strong> 
+                                        <strong>Inicio:</strong>
                                         <span th:text="${#temporals.format(torneo.fechaInicio, 'dd/MM/yyyy')}"></span>
                                     </p>
                                     <p class="mb-2">
                                         <i class="fas fa-calendar-check text-success"></i>
-                                        <strong>Fin:</strong> 
+                                        <strong>Fin:</strong>
                                         <span th:text="${#temporals.format(torneo.fechaFin, 'dd/MM/yyyy')}"></span>
                                     </p>
                                     <p class="mb-2">
                                         <i class="fas fa-map-marker-alt text-danger"></i>
                                         <strong>Ubicación:</strong><br>
-                                        <small th:text="${torneo.ubicacionLocalidad + ' - ' + torneo.ubicacionBarrio}"></small>
+                                        <small
+                                            th:text="${torneo.ubicacionLocalidad + ' - ' + torneo.ubicacionBarrio}"></small>
                                     </p>
                                 </div>
 
@@ -133,10 +134,11 @@
                                             <i class="fas fa-users"></i> Equipos Inscritos
                                         </small>
                                         <div class="progress" style="height: 25px;">
-                                            <div class="progress-bar bg-success" role="progressbar" 
-                                                 th:style="'width: ' + ${(torneo.totalInscritos * 100.0 / torneo.cupoMaximo)} + '%'"
-                                                 th:attr="aria-valuenow=${torneo.totalInscritos}, aria-valuemin=0, aria-valuemax=${torneo.cupoMaximo}">
-                                                <strong th:text="${torneo.totalInscritos} + ' / ' + ${torneo.cupoMaximo}"></strong>
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                th:style="'width: ' + ${(torneo.totalInscritos * 100.0 / torneo.cupoMaximo)} + '%'"
+                                                th:attr="aria-valuenow=${torneo.totalInscritos}, aria-valuemin=0, aria-valuemax=${torneo.cupoMaximo}">
+                                                <strong
+                                                    th:text="${torneo.totalInscritos} + ' / ' + ${torneo.cupoMaximo}"></strong>
                                             </div>
                                         </div>
                                     </div>
@@ -173,7 +175,7 @@
                     </div>
                     <h4 class="text-muted">No estás inscrito en ningún torneo</h4>
                     <p class="text-muted">
-                        Tu escuela aún no se ha inscrito en ningún torneo. 
+                        Tu escuela aún no se ha inscrito en ningún torneo.
                         Habla con tu líder para conocer las próximas competiciones.
                     </p>
                     <div class="alert alert-info d-inline-block">

@@ -62,7 +62,7 @@
           <a th:href="@{/jugador/dashboard}" class="list-group-item list-group-item-action">Inicio</a>
           <a th:href="@{/jugador/perfil/modificar}" class="list-group-item list-group-item-action">Mi Perfil</a>
           <a href="#" class="list-group-item list-group-item-action">Entrenamientos</a>
-          <a href="#" class="list-group-item list-group-item-action">Torneos</a>
+          <a th:href="@{/torneos/jugador}" class="list-group-item list-group-item-action">Torneos</a>
           <a th:href="@{/jugador/escuela}" class="list-group-item list-group-item-action active">Mi Escuela</a>
         </div>
       </div>
@@ -73,15 +73,17 @@
         <div class="card border-warning shadow-sm">
           <div class="card-body bg-light">
             <h4 class="card-title text-primary mb-3">
-              <i class="fas fa-school"></i> 
+              <i class="fas fa-school"></i>
               <span th:text="${escuela != null} ? ${escuela.nombre} : 'No asignado'">Nombre de la Escuela</span>
             </h4>
-            
+
             <div th:if="${escuela != null}">
               <div class="row">
                 <div class="col-md-6">
-                  <p><strong><i class="fas fa-phone"></i> Teléfono:</strong> <span th:text="${escuela.telefono}">555-1234567</span></p>
-                  <p><strong><i class="fas fa-envelope"></i> Correo:</strong> <span th:text="${escuela.email}">contacto@escuela.com</span></p>
+                  <p><strong><i class="fas fa-phone"></i> Teléfono:</strong> <span
+                      th:text="${escuela.telefono}">555-1234567</span></p>
+                  <p><strong><i class="fas fa-envelope"></i> Correo:</strong> <span
+                      th:text="${escuela.email}">contacto@escuela.com</span></p>
                 </div>
                 <div class="col-md-6" th:if="${ubicaciones != null && !#lists.isEmpty(ubicaciones)}">
                   <p><strong><i class="fas fa-map-marker-alt"></i> Ubicaciones:</strong></p>
@@ -94,8 +96,9 @@
               </div>
 
               <div class="mt-3" th:if="${escuela.lideres != null && !#lists.isEmpty(escuela.lideres)}">
-                <p><strong><i class="fas fa-user-tie"></i> Líder:</strong> 
-                  <span th:text="${escuela.lideres[0].nombres + ' ' + escuela.lideres[0].apellidos}">Nombre del Líder</span>
+                <p><strong><i class="fas fa-user-tie"></i> Líder:</strong>
+                  <span th:text="${escuela.lideres[0].nombres + ' ' + escuela.lideres[0].apellidos}">Nombre del
+                    Líder</span>
                 </p>
               </div>
             </div>
