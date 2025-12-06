@@ -35,6 +35,10 @@ public class SecurityConfig {
                                                 .requestMatchers("/jugador/**").hasRole("JUGADOR")
                                                 .requestMatchers("/escuelas/**", "/categorias/**", "/canchas/**", "/jugadores/**")
                                                 .hasAnyRole("ADMIN", "LIDER")
+                                                // NUEVAS RUTAS DE TORNEOS
+                                                .requestMatchers("/torneos/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/torneos/lider/**").hasRole("LIDER")
+                                                .requestMatchers("/torneos/jugador/**").hasRole("JUGADOR")
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
                                                 .loginPage("/login")

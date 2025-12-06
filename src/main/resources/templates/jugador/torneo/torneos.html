@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mis Torneos - F.A.S Jugador</title>
+    <link rel="shortcut icon" href="/images/Logo.png" type="image/x-icon" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        .footer-content {
+            flex-direction: column;
+        }
+
+        @media (min-width: 576px) {
+            .footer-content {
+                flex-direction: row;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                border-right: none !important;
+                border-bottom: 1px solid #dee2e6;
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .torneo-card {
+            transition: all 0.3s ease;
+        }
+
+        .torneo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container-fluid">
+            <a th:href="@{/jugador/dashboard}" class="d-flex align-items-center text-white text-decoration-none">
+                <img src="/images/Logo.png" alt="Logo" width="60" class="me-2" />
+                <span class="fs-3">F.A.S - Jugador</span>
+            </a>
+
+            <div class="ms-auto d-flex align-items-center">
+                <a th:href="@{/jugador/perfil/modificar}" class="nav-link text-white me-3">Mi Perfil</a>
+                <form method="POST" th:action="@{/logout}" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+
+            <aside class="col-md-3 col-lg-2 sidebar bg-light p-3 shadow-sm">
+                <h5 class="text-primary mb-3">Menú Jugador</h5>
+                <div class="list-group">
+                    <a th:href="@{/jugador/dashboard}" class="list-group-item list-group-item-action">Inicio</a>
+                    <a href="#" class="list-group-item list-group-item-action">Entrenamientos</a>
+                    <a th:href="@{/torneos/jugador}" class="list-group-item list-group-item-action active">Torneos</a>
+                    <a th:href="@{/jugador/escuela}" class="list-group-item list-group-item-action">Mi Escuela</a>
+                </div>
+            </aside>
+
+            <main class="col-md-9 col-lg-10 p-4">
+                <h2 class="mb-3">
+                    <i class="fas fa-trophy text-warning"></i> Mis Torneos
+                </h2>
+                <p class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Aquí puedes ver los torneos en los que tu escuela está inscrita.
+                </p>
+
+                <div class="row" th:if="${!#lists.isEmpty(torneos)}">
+                    <div class="col-md-6 col-lg-4 mb-4" th:each="torneo : ${torneos}">
+                        <div class="card torneo-card shadow h-100 border-warning">
+                            <div class="card-header bg-warning">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-trophy"></i> <span th:text="${torneo.nombre}"></span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <span class="badge bg-primary mb-2">
+                                        <i class="fas fa-layer-group"></i>
+                                        <span th:text="${torneo.categoriaNombre}"></span>
+                                    </span>
+                                    <span th:if="${torneo.estado == 'Próximo'}" class="badge bg-info mb-2">
+                                        <i class="fas fa-clock"></i> <span th:text="${torneo.estado}"></span>
+                                    </span>
+                                    <span th:if="${torneo.estado == 'En Curso'}" class="badge bg-success mb-2">
+                                        <i class="fas fa-play"></i> <span th:text="${torneo.estado}"></span>
+                                    </span>
+                                    <span th:if="${torneo.estado == 'Finalizado'}" class="badge bg-secondary mb-2">
+                                        <i class="fas fa-flag-checkered"></i> <span th:text="${torneo.estado}"></span>
+                                    </span>
+                                </div>
+
+                                <div class="border-start border-primary border-4 ps-3 mb-3">
+                                    <p class="mb-2">
+                                        <i class="fas fa-calendar-alt text-primary"></i>
+                                        <strong>Inicio:</strong> 
+                                        <span th:text="${#temporals.format(torneo.fechaInicio, 'dd/MM/yyyy')}"></span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="fas fa-calendar-check text-success"></i>
+                                        <strong>Fin:</strong> 
+                                        <span th:text="${#temporals.format(torneo.fechaFin, 'dd/MM/yyyy')}"></span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                        <strong>Ubicación:</strong><br>
+                                        <small th:text="${torneo.ubicacionLocalidad + ' - ' + torneo.ubicacionBarrio}"></small>
+                                    </p>
+                                </div>
+
+                                <div th:if="${torneo.descripcion}" class="alert alert-light">
+                                    <strong><i class="fas fa-info-circle"></i> Descripción:</strong>
+                                    <p class="mb-0 small" th:text="${torneo.descripcion}"></p>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-users"></i> Equipos Inscritos
+                                        </small>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 th:style="'width: ' + ${(torneo.totalInscritos * 100.0 / torneo.cupoMaximo)} + '%'"
+                                                 th:attr="aria-valuenow=${torneo.totalInscritos}, aria-valuemin=0, aria-valuemax=${torneo.cupoMaximo}">
+                                                <strong th:text="${torneo.totalInscritos} + ' / ' + ${torneo.cupoMaximo}"></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock"></i>
+                                        <span th:if="${torneo.estado == 'Próximo'}">
+                                            Próximamente
+                                        </span>
+                                        <span th:if="${torneo.estado == 'En Curso'}">
+                                            En progreso
+                                        </span>
+                                        <span th:if="${torneo.estado == 'Finalizado'}">
+                                            Finalizado
+                                        </span>
+                                    </small>
+                                    <span class="badge bg-warning">
+                                        <i class="fas fa-school"></i> Tu Escuela
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sin torneos -->
+                <div th:if="${#lists.isEmpty(torneos)}" class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-trophy fa-5x text-muted"></i>
+                    </div>
+                    <h4 class="text-muted">No estás inscrito en ningún torneo</h4>
+                    <p class="text-muted">
+                        Tu escuela aún no se ha inscrito en ningún torneo. 
+                        Habla con tu líder para conocer las próximas competiciones.
+                    </p>
+                    <div class="alert alert-info d-inline-block">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Consejo:</strong> Los líderes pueden inscribir a tu escuela en torneos desde su panel.
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="bg-warning py-3 mt-auto">
+        <div class="container text-center">
+            <div class="d-flex align-items-center justify-content-center footer-content">
+                <img src="/images/Logo.png" alt="Logo" class="me-2" width="60" />
+                <span class="text-dark">© Football Association System. Todos los derechos reservados.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
