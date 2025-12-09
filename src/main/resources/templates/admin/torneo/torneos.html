@@ -27,6 +27,10 @@
                 margin-bottom: 1rem;
             }
         }
+
+        .estado-select {
+            min-width: 130px;
+        }
     </style>
 </head>
 
@@ -137,15 +141,29 @@
                                 <td th:text="${#temporals.format(torneo.fechaInicio, 'dd/MM/yyyy')}"></td>
                                 <td th:text="${#temporals.format(torneo.fechaFin, 'dd/MM/yyyy')}"></td>
                                 <td>
-                                    <span th:if="${torneo.estado == 'Próximo'}" class="badge bg-info">
-                                        <i class="fas fa-clock"></i> <span th:text="${torneo.estado}"></span>
-                                    </span>
-                                    <span th:if="${torneo.estado == 'En Curso'}" class="badge bg-success">
-                                        <i class="fas fa-play"></i> <span th:text="${torneo.estado}"></span>
-                                    </span>
-                                    <span th:if="${torneo.estado == 'Finalizado'}" class="badge bg-secondary">
-                                        <i class="fas fa-flag-checkered"></i> <span th:text="${torneo.estado}"></span>
-                                    </span>
+                                    <form th:action="@{/torneos/admin/cambiar-estado/{id}(id=${torneo.idTorneo})}" 
+                                          method="post" class="d-inline">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                        
+                                        <select name="nuevoEstado" class="form-select form-select-sm estado-select d-inline-block"
+                                                onchange="this.form.submit()"
+                                                th:classappend="${torneo.estado == 'Próximo'} ? 'bg-info text-white' : 
+                                                               (${torneo.estado == 'En Curso'} ? 'bg-success text-white' : 
+                                                               (${torneo.estado == 'Finalizado'} ? 'bg-secondary text-white' : 'bg-danger text-white'))">
+                                            <option value="PROXIMO" th:selected="${torneo.estado == 'Próximo'}">
+                                                <i class="fas fa-clock"></i> Próximo
+                                            </option>
+                                            <option value="EN_CURSO" th:selected="${torneo.estado == 'En Curso'}">
+                                                <i class="fas fa-play"></i> En Curso
+                                            </option>
+                                            <option value="FINALIZADO" th:selected="${torneo.estado == 'Finalizado'}">
+                                                <i class="fas fa-flag-checkered"></i> Finalizado
+                                            </option>
+                                            <option value="CANCELADO" th:selected="${torneo.estado == 'Cancelado'}">
+                                                <i class="fas fa-ban"></i> Cancelado
+                                            </option>
+                                        </select>
+                                    </form>
                                 </td>
                                 <td>
                                     <a th:href="@{/torneos/admin/inscritos/{id}(id=${torneo.idTorneo})}"

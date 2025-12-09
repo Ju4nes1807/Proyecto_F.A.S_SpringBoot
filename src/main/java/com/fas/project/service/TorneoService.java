@@ -361,6 +361,40 @@ public class TorneoService {
         torneoRepository.saveAll(torneos);
     }
 
+    @Transactional
+    public void cambiarEstadoTorneo(Integer torneoId, String nuevoEstado) {
+        Torneo torneo = torneoRepository.findById(torneoId)
+                .orElseThrow(() -> new RuntimeException("Torneo no encontrado"));
+        
+        try {
+            Torneo.EstadoTorneo estadoEnum = Torneo.EstadoTorneo.valueOf(nuevoEstado);
+            
+            // Validaciones de lógica de negocio
+            if (estadoEnum == Torneo.EstadoTorneo.EN_CURSO) {
+                LocalDate hoy = LocalDate.now();
+                if (hoy.isBefore(torneo.getFechaInicio())) {
+                    throw new RuntimeException("No se puede marcar como EN_CURSO un torneo que aún no ha iniciado");
+                }
+                if (hoy.isAfter(torneo.getFechaFin())) {
+                    throw new RuntimeException("No se puede marcar como EN_CURSO un torneo que ya finalizó");
+                }
+            }
+            
+            if (estadoEnum == Torneo.EstadoTorneo.FINALIZADO) {
+                LocalDate hoy = LocalDate.now();
+                if (hoy.isBefore(torneo.getFechaFin())) {
+                    throw new RuntimeException("No se puede finalizar un torneo antes de su fecha de fin");
+                }
+            }
+            
+            torneo.setEstado(estadoEnum);
+            torneoRepository.save(torneo);
+            
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Estado inválido: " + nuevoEstado);
+        }
+    }
+
     private TorneoDTO convertirADTO(Torneo torneo) {
         int totalInscritos = (int) inscripcionRepository
                 .findByTorneoIdWithDetails(torneo.getIdTorneo())

@@ -104,6 +104,23 @@ public class TorneoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+@PostMapping("/admin/cambiar-estado/{id}")
+public String cambiarEstadoTorneo(
+        @PathVariable("id") Integer id,
+        @RequestParam("nuevoEstado") String nuevoEstado,
+        RedirectAttributes redirectAttributes) {
+    
+    try {
+        torneoService.cambiarEstadoTorneo(id, nuevoEstado);
+        redirectAttributes.addFlashAttribute("success", "Estado del torneo actualizado exitosamente");
+    } catch (RuntimeException e) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    
+    return "redirect:/torneos/admin";
+}
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/editar/{id}")
     public String editarTorneo(
             @PathVariable("id") Integer id,
