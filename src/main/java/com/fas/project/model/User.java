@@ -32,6 +32,9 @@ public class User {
     private String telefono;
     @Column(nullable = false)
     private String password;
+    @ManyToOne
+@JoinColumn(name = "id_escuela")
+private Escuela escuela;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Entrenamiento</title>
+</head>
+<body>
+
+<h1>Crear Entrenamiento</h1>
+
+<form th:action="@{/api/entrenamientos/crear}" method="post">
+
+    <!-- Fecha -->
+    <label>Fecha:</label>
+    <input type="date" name="fecha" required><br><br>
+
+    <!-- Hora -->
+    <label>Hora:</label>
+    <input type="time" name="hora" required><br><br>
+
+    <!-- Categoría -->
+    <label>Categoría:</label>
+    <select name="idCategoria" required>
+        <option value="">Seleccione una categoría</option>
+        <option th:each="c : ${categorias}"
+                th:value="${c.idCategoria}"
+                th:text="${c.nombre}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Ubicación -->
+    <label>Ubicación (Localidad - Barrio):</label>
+    <select name="idUbicacion" required>
+        <option value="">Seleccione una ubicación</option>
+        <option th:each="u : ${ubicaciones}"
+                th:value="${u.idUbicacion}"
+                th:text="${u.localidad + ' - ' + u.barrio}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Cancha -->
+    <label>Cancha:</label>
+    <select name="idCancha" required>
+        <option value="">Seleccione la cancha</option>
+        <option th:each="ca : ${canchas}"
+                th:value="${ca.idCancha}"
+                th:text="${ca.nombre}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Líder -->
+    <label>Líder:</label>
+    <select name="idLider" required>
+        <option value="">Seleccione líder</option>
+        <option th:each="l : ${lideres}"
+                th:value="${l.idUsuario}"
+                th:text="${l.nombre}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Escuela -->
+    <label>Escuela:</label>
+    <select name="idEscuela" required>
+        <option value="">Seleccione escuela</option>
+        <option th:each="es : ${escuelas}"
+                th:value="${es.idEscuela}"
+                th:text="${es.nombre}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Guardar</button>
+
+</form>
+
+<br>
+<a href="/entrenamientos">Volver</a>
+
+</body>
+</html>

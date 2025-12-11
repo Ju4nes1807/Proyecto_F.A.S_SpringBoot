@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Entrenamiento</title>
+</head>
+<body>
+
+<h1>Editar Entrenamiento</h1>
+
+<form th:action="@{'/api/entrenamientos/editar/' + ${entrenamiento.idEntrenamiento}}" method="post">
+
+    <!-- Fecha -->
+    <label>Fecha:</label>
+    <input type="date" name="fecha" th:value="${entrenamiento.fecha}" required><br><br>
+
+    <!-- Hora -->
+    <label>Hora:</label>
+    <input type="time" name="hora" th:value="${entrenamiento.hora}" required><br><br>
+
+    <!-- Categoría -->
+    <label>Categoría:</label>
+    <select name="idCategoria" required>
+        <option th:each="c : ${categorias}"
+                th:value="${c.idCategoria}"
+                th:text="${c.nombre}"
+                th:selected="${c.idCategoria == entrenamiento.categoria.idCategoria}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Ubicación -->
+    <label>Ubicación:</label>
+    <select name="idUbicacion" required>
+        <option th:each="u : ${ubicaciones}"
+                th:value="${u.idUbicacion}"
+                th:text="${u.localidad + ' - ' + u.barrio}"
+                th:selected="${u.idUbicacion == entrenamiento.ubicacion.idUbicacion}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Cancha -->
+    <label>Cancha:</label>
+    <select name="idCancha" required>
+        <option th:each="ca : ${canchas}"
+                th:value="${ca.idCancha}"
+                th:text="${ca.nombre}"
+                th:selected="${ca.idCancha == entrenamiento.cancha.idCancha}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Lider -->
+    <label>Líder:</label>
+    <select name="idLider" required>
+        <option th:each="l : ${lideres}"
+                th:value="${l.idUsuario}"
+                th:text="${l.nombre}"
+                th:selected="${l.idUsuario == entrenamiento.lider.idUsuario}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Escuela -->
+    <label>Escuela:</label>
+    <select name="idEscuela" required>
+        <option th:each="es : ${escuelas}"
+                th:value="${es.idEscuela}"
+                th:text="${es.nombre}"
+                th:selected="${es.idEscuela == entrenamiento.escuela.idEscuela}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Actualizar</button>
+
+</form>
+
+<br>
+<a href="/entrenamientos">Volver</a>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Entrenamientos</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<h1>Lista de Entrenamientos</h1>
+
+<a th:href="@{/Entrenamientos/EditarEntrenamiento}">Crear nuevo entrenamiento</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Categoría</th>
+        <th>Localidad</th>
+        <th>Barrio</th>
+        <th>Cancha</th>
+        <th>Hora</th>
+        <th>Escuela</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="e : ${lista}">
+        <td th:text="${e.idEntrenamiento}"></td>
+        <td th:text="${e.fecha}"></td>
+        <td th:text="${e.categoria.nombre}"></td>
+        <td th:text="${e.ubicacion.localidad}"></td>
+        <td th:text="${e.ubicacion.barrio}"></td>
+        <td th:text="${e.cancha.nombre}"></td>
+        <td th:text="${e.hora}"></td>
+        <td th:text="${e.escuela.nombre}"></td>
+
+        <td>
+            <a th:href="@{'/entrenamientos/editar/' + ${e.idEntrenamiento}}">Editar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
