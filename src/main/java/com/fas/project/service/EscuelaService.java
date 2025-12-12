@@ -17,9 +17,9 @@ import com.fas.project.model.Escuela;
 import com.fas.project.model.Lider;
 import com.fas.project.model.Ubicacion;
 import com.fas.project.model.User;
-import com.fas.project.repository.UserRepository;
 import com.fas.project.repository.EscuelaRepository;
 import com.fas.project.repository.UbicacionRepository;
+import com.fas.project.repository.UserRepository;
 
 @Service
 public class EscuelaService {
