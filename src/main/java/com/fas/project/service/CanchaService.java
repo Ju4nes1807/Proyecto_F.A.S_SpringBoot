@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.fas.project.dto.cancha.CanchaDTO;
 import com.fas.project.mapper.MapperCancha;
 import com.fas.project.model.Cancha;
-import com.fas.project.repository.CanchaRepository;
 import com.fas.project.model.Ubicacion;
+import com.fas.project.repository.CanchaRepository;
 import com.fas.project.repository.UbicacionRepository;
 
 @Service

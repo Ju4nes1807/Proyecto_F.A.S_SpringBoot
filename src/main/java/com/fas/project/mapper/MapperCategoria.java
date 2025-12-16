@@ -2,8 +2,8 @@ package com.fas.project.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.fas.project.dto.escuela.EscuelaDTO;
 import com.fas.project.dto.categoria.CategoriaDTO;
+import com.fas.project.dto.escuela.EscuelaDTO;
 import com.fas.project.model.Categoria;
 
 @Component

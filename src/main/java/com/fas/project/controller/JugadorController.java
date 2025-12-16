@@ -1,6 +1,10 @@
 package com.fas.project.controller;
 
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,8 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fas.project.dto.user.JugadorCreateDTO;
 import com.fas.project.dto.user.JugadorDTO;
+import com.fas.project.model.Escuela;
+import com.fas.project.model.Lider;
+import com.fas.project.model.User;
+import com.fas.project.service.CustomUserDetailsService;
 import com.fas.project.service.JugadorService;
+import com.fas.project.service.ReporteService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @Controller
@@ -23,9 +33,11 @@ import jakarta.validation.Valid;
 public class JugadorController {
 
     private final JugadorService jugadorService;
+    private final ReporteService reporteService;
 
-    public JugadorController(JugadorService jugadorService) {
+    public JugadorController(JugadorService jugadorService, ReporteService reporteService) {
         this.jugadorService = jugadorService;
+        this.reporteService = reporteService;
     }
 
     @PreAuthorize("hasRole('LIDER')")
@@ -153,4 +165,105 @@ public class JugadorController {
 
         return "redirect:/jugadores";
     }
+
+    @PreAuthorize("hasRole('LIDER')")
+    @GetMapping("/reporte/pdf")
+    public void generarReportePdf(
+            HttpServletResponse response,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Integer categoriaId,
+            @RequestParam(required = false) String posicion) throws Exception {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        if (!(principal instanceof CustomUserDetailsService.CustomUserDetails)) {
+            throw new RuntimeException("Usuario no autenticado correctamente");
+        }
+
+        CustomUserDetailsService.CustomUserDetails userDetails = (CustomUserDetailsService.CustomUserDetails) principal;
+        User user = userDetails.getUser();
+
+        if (!(user instanceof Lider)) {
+            throw new RuntimeException("Solo los líderes pueden acceder a esta funcionalidad");
+        }
+
+        Lider lider = (Lider) user;
+        Escuela escuela = lider.getEscuela();
+        Integer idEscuela = escuela.getIdEscuela();
+
+        // LIMPIAR PARÁMETROS: Convertir strings vacíos a null
+        String nombreLimpio = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : null;
+        String posicionLimpia = (posicion != null && !posicion.trim().isEmpty()) ? posicion.trim() : null;
+
+        // Agregar comodines al nombre solo si no es null
+        String nombreBusqueda = (nombreLimpio != null) ? "%" + nombreLimpio + "%" : null;
+
+        // Llamar al servicio con parámetros limpios
+        List<JugadorDTO> jugadores = jugadorService.obtenerReporteJugadores(
+                idEscuela,
+                nombreBusqueda,
+                categoriaId,
+                posicionLimpia);
+
+        if (jugadores.isEmpty()) {
+            throw new RuntimeException("No se encontraron jugadores para la escuela con ID: " + idEscuela);
+        }
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=reporte_jugadores.pdf");
+
+        reporteService.generarReporteJugadoresPDF(jugadores, response.getOutputStream());
+    }
+
+    @PreAuthorize("hasRole('LIDER')")
+    @GetMapping("/reporte/excel")
+    public void generarReporteExcel(
+            HttpServletResponse response,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Integer categoriaId,
+            @RequestParam(required = false) String posicion) throws Exception {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        if (!(principal instanceof CustomUserDetailsService.CustomUserDetails)) {
+            throw new RuntimeException("Usuario no autenticado correctamente");
+        }
+
+        CustomUserDetailsService.CustomUserDetails userDetails = (CustomUserDetailsService.CustomUserDetails) principal;
+        User user = userDetails.getUser();
+
+        if (!(user instanceof Lider)) {
+            throw new RuntimeException("Solo los líderes pueden acceder a esta funcionalidad");
+        }
+
+        Lider lider = (Lider) user;
+        Escuela escuela = lider.getEscuela();
+        Integer idEscuela = escuela.getIdEscuela();
+
+        // LIMPIAR PARÁMETROS: Convertir strings vacíos a null
+        String nombreLimpio = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : null;
+        String posicionLimpia = (posicion != null && !posicion.trim().isEmpty()) ? posicion.trim() : null;
+
+        // Agregar comodines al nombre solo si no es null
+        String nombreBusqueda = (nombreLimpio != null) ? "%" + nombreLimpio + "%" : null;
+
+        // Obtener jugadores con los mismos filtros
+        List<JugadorDTO> jugadores = jugadorService.obtenerReporteJugadores(
+                idEscuela,
+                nombreBusqueda,
+                categoriaId,
+                posicionLimpia);
+
+        if (jugadores.isEmpty()) {
+            throw new RuntimeException("No se encontraron jugadores para la escuela con ID: " + idEscuela);
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=reporte_jugadores.xlsx");
+
+        reporteService.generarReporteJugadoresExcel(jugadores, response.getOutputStream());
+    }
+
 }

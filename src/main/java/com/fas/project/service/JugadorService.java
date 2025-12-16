@@ -208,6 +208,16 @@ public class JugadorService {
         jugadorRepository.delete(jugador);
     }
 
+    public List<JugadorDTO> obtenerReporteJugadores(Integer idEscuela, String nombre, Integer categoriaId,
+            String posicion) {
+
+        List<Jugador> jugadores = userRepository.obtenerJugadoresPorEscuela(idEscuela, nombre, categoriaId, posicion);
+
+        return jugadores.stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+    }
+
     private JugadorDTO convertirADTO(Jugador jugador) {
         return JugadorDTO.builder()
                 .idUsuario(jugador.getIdUsuario())
