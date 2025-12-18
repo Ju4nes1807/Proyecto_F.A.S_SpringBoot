@@ -1,5 +1,7 @@
 package com.fas.project.controller;
 
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fas.project.dto.torneo.TorneoCreateDTO;
+import com.fas.project.dto.torneo.TorneoReporteDTO;
 import com.fas.project.repository.CategoriaRepository;
 import com.fas.project.repository.UbicacionRepository;
+import com.fas.project.service.ReporteService;
 import com.fas.project.service.TorneoService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @Controller
@@ -26,13 +31,16 @@ public class TorneoController {
     private final TorneoService torneoService;
     private final CategoriaRepository categoriaRepository;
     private final UbicacionRepository ubicacionRepository;
+    private final ReporteService reporteService;
 
     public TorneoController(TorneoService torneoService,
             CategoriaRepository categoriaRepository,
-            UbicacionRepository ubicacionRepository) {
+            UbicacionRepository ubicacionRepository,
+            ReporteService reporteService) {
         this.torneoService = torneoService;
         this.categoriaRepository = categoriaRepository;
         this.ubicacionRepository = ubicacionRepository;
+        this.reporteService = reporteService;
     }
 
     // ===== ADMINISTRADOR =====
@@ -104,21 +112,21 @@ public class TorneoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-@PostMapping("/admin/cambiar-estado/{id}")
-public String cambiarEstadoTorneo(
-        @PathVariable("id") Integer id,
-        @RequestParam("nuevoEstado") String nuevoEstado,
-        RedirectAttributes redirectAttributes) {
-    
-    try {
-        torneoService.cambiarEstadoTorneo(id, nuevoEstado);
-        redirectAttributes.addFlashAttribute("success", "Estado del torneo actualizado exitosamente");
-    } catch (RuntimeException e) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
+    @PostMapping("/admin/cambiar-estado/{id}")
+    public String cambiarEstadoTorneo(
+            @PathVariable("id") Integer id,
+            @RequestParam("nuevoEstado") String nuevoEstado,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            torneoService.cambiarEstadoTorneo(id, nuevoEstado);
+            redirectAttributes.addFlashAttribute("success", "Estado del torneo actualizado exitosamente");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        
+        return "redirect:/torneos/admin";
     }
-    
-    return "redirect:/torneos/admin";
-}
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/editar/{id}")
@@ -193,6 +201,54 @@ public String cambiarEstadoTorneo(
         }
 
         return "redirect:/torneos/admin/inscritos/" + torneoId;
+    }
+
+    // ===== REPORTES ADMIN =====
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/reporte/pdf")
+    public void generarReportePdf(
+            HttpServletResponse response,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String estado) throws Exception {
+
+        // Limpiar parámetros
+        String nombreLimpio = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : null;
+        String estadoLimpio = (estado != null && !estado.trim().isEmpty()) ? estado.trim() : null;
+
+        List<TorneoReporteDTO> torneos = torneoService.obtenerReporteTorneos(nombreLimpio, estadoLimpio);
+
+        if (torneos.isEmpty()) {
+            throw new RuntimeException("No se encontraron torneos con los criterios especificados");
+        }
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=reporte_torneos.pdf");
+
+        reporteService.generarReporteTorneosPDF(torneos, response.getOutputStream());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/reporte/excel")
+    public void generarReporteExcel(
+            HttpServletResponse response,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String estado) throws Exception {
+
+        // Limpiar parámetros
+        String nombreLimpio = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : null;
+        String estadoLimpio = (estado != null && !estado.trim().isEmpty()) ? estado.trim() : null;
+
+        List<TorneoReporteDTO> torneos = torneoService.obtenerReporteTorneos(nombreLimpio, estadoLimpio);
+
+        if (torneos.isEmpty()) {
+            throw new RuntimeException("No se encontraron torneos con los criterios especificados");
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=reporte_torneos.xlsx");
+
+        reporteService.generarReporteTorneosExcel(torneos, response.getOutputStream());
     }
 
     // ===== LÍDER =====

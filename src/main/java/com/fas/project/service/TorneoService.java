@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fas.project.dto.torneo.InscripcionDTO;
 import com.fas.project.dto.torneo.TorneoCreateDTO;
 import com.fas.project.dto.torneo.TorneoDTO;
+import com.fas.project.dto.torneo.TorneoReporteDTO;
 import com.fas.project.model.Categoria;
 import com.fas.project.model.Escuela;
 import com.fas.project.model.InscripcionTorneo;
@@ -393,6 +394,47 @@ public class TorneoService {
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Estado inválido: " + nuevoEstado);
         }
+    }
+    
+    // ===== MÉTODO PARA REPORTES =====
+    
+    public List<TorneoReporteDTO> obtenerReporteTorneos(String nombre, String estado) {
+        Torneo.EstadoTorneo estadoEnum = null;
+        if (estado != null && !estado.isEmpty()) {
+            try {
+                estadoEnum = Torneo.EstadoTorneo.valueOf(estado);
+            } catch (IllegalArgumentException e) {
+                // Estado inválido, se ignora
+            }
+        }
+
+        List<Torneo> torneos = torneoRepository.buscarPorFiltros(nombre, estadoEnum);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        return torneos.stream()
+                .map(torneo -> {
+                    int totalInscritos = (int) inscripcionRepository
+                            .findByTorneoIdWithDetails(torneo.getIdTorneo())
+                            .stream()
+                            .filter(i -> i.getEstado() == InscripcionTorneo.EstadoInscripcion.ACTIVA)
+                            .count();
+
+                    return TorneoReporteDTO.builder()
+                            .idTorneo(torneo.getIdTorneo())
+                            .nombre(torneo.getNombre())
+                            .fechaInicio(torneo.getFechaInicio().format(formatter))
+                            .fechaFin(torneo.getFechaFin().format(formatter))
+                            .descripcion(torneo.getDescripcion())
+                            .cupoMaximo(torneo.getCupoMaximo())
+                            .cuposDisponibles(torneo.getCuposDisponibles())
+                            .estado(torneo.getEstado().getDisplayName())
+                            .categoriaNombre(torneo.getCategoria().getNombre())
+                            .ubicacionLocalidad(torneo.getUbicacion().getLocalidad())
+                            .ubicacionBarrio(torneo.getUbicacion().getBarrio())
+                            .totalInscritos(totalInscritos)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     private TorneoDTO convertirADTO(Torneo torneo) {
